@@ -22,42 +22,73 @@ function App() {
   //   play ? 6000 : null
   // );
 
-  const ref = useRef([]);
+  const refs = useRef([]);
 
   useEffect(() => {
-    ref.current = ref.current.slice(0, reactArray.length);
+    let timeline = gsap.timeline({ repeat: -1 });
+    refs.current = refs.current.slice(0, reactArray.length);
+    refs.current.map((ref) => {
+      return timeline.add(
+        gsap.fromTo(
+          ref,
+          {
+            opacity: 0,
+            rotateX: '-90deg',
+            translateZ: '25px',
+            transformOrigin: '50% 50% 25px'
+          },
+          {
+            opacity: 1,
+            rotateX: '0deg',
+            transition:
+              'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            duration: 0.1
+          }
+        )
+      );
+    });
+    timeline.addPause(refs.current.lastItem, gsap.delayedCall, [
+      2.5,
+      () => timeline.play()
+    ]);
+    refs.current.map((ref) => {
+      return timeline.add(
+        gsap.fromTo(
+          ref,
+          {
+            opacity: 1,
+            rotateX: '0deg',
+            transition:
+              'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          },
+          {
+            rotateX: '90deg',
+            transition:
+              'transform 0.32s cubic-bezier(0.55, 0.055, 0.675, 0.19)',
+            duration: 0.1
+          }
+        )
+      );
+    });
+    timeline.addPause(refs.current.lastItem, gsap.delayedCall, [
+      1.5,
+      () => timeline.play()
+    ]);
     // const timer = setTimeout(() => {
     //   setItems(swiftArray);
     //   setPlay(true);
     // }, 4000);
-    setInterval(() => {
-      setItems(reactArray);
-    }, 4000);
+    // setInterval(() => {
+    //   setItems(reactArray);
+    // }, 4000);
     // return () => clearTimeout(timer);
-    // let timeline = gsap.timeline();
-    // timeline
-    //   .add(gsap.set(ref.current, { opacity: 1 }))
-    //   .add(
-    //     gsap.fromTo(
-    //       ref.current,
-    //       { opacity: 0, rotateX: '-90deg' },
-    //       { opacity: 1, rotateX: '0deg', transition: '', duration: 4 }
-    //     )
-    //   );
-    // .add(
-    //   gsap.to(ref.current, {
-    //     opacity: 1,
-    //     rotateX: '0deg',
-    //     transition: 'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-    //   })
-    // );
-  }, [reactArray, swiftArray]);
+  }, [reactArray, swiftArray, refs]);
 
   return (
     <div className='.App'>
       {reactArray.map((item, index) => {
         return (
-          <span key={`span-${index}`} ref={(el) => (ref.current[index] = el)}>
+          <span key={`span-${index}`} ref={(el) => (refs.current[index] = el)}>
             {item}
           </span>
         );
