@@ -1,32 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { unmountComponentAtNode } from 'react-dom';
 import './App.module.scss';
 
 import { gsap } from 'gsap';
 
 function App() {
-  const reactArray = 'reactdsaf.'.split('');
-  const swiftArray = 'Swift'.split('');
-  const [items, setItems] = useState(reactArray);
+  let words = ['reactdsaf.', 'somet4124124hing', '123'];
   const [count, setCount] = useState(0);
-  const [play, setPlay] = useState(false);
-
-  // setInterval(
-  //   () => {
-  //     setItems(reactArray);
-  //     setCount(count + 1);
-  //     if (count === 1) {
-  //       setCount(0);
-  //       setItems(swiftArray);
-  //     }
-  //   },
-  //   play ? 6000 : null
-  // );
-
+  const [items, setItems] = useState(words[count]);
   const refs = useRef([]);
 
   useEffect(() => {
-    let timeline = gsap.timeline({ repeat: -1 });
-    refs.current = refs.current.slice(0, reactArray.length);
+    let timeline = gsap.timeline({ repeat: 1 });
+    refs.current = refs.current.slice(0, items.split('').length);
     refs.current.map((ref) => {
       return timeline.add(
         gsap.fromTo(
@@ -56,7 +42,6 @@ function App() {
         gsap.fromTo(
           ref,
           {
-            opacity: 1,
             rotateX: '0deg',
             transition:
               'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
@@ -71,22 +56,27 @@ function App() {
       );
     });
     timeline.addPause(refs.current.lastItem, gsap.delayedCall, [
-      1.5,
-      () => timeline.play()
+      2,
+      () => {
+        if (count < words.length - 1) {
+          setCount(count + 1);
+          console.log(count);
+          setItems(words[count]);
+        } else {
+          setCount(0);
+          setItems(words[count]);
+        }
+        // console.log(count);
+        // console.log(words[count]);
+        timeline.play();
+      }
     ]);
-    // const timer = setTimeout(() => {
-    //   setItems(swiftArray);
-    //   setPlay(true);
-    // }, 4000);
-    // setInterval(() => {
-    //   setItems(reactArray);
-    // }, 4000);
-    // return () => clearTimeout(timer);
-  }, [reactArray, swiftArray, refs]);
+    // timeline.clear(true);
+  }, [refs, items, words, count]);
 
   return (
     <div className='.App'>
-      {reactArray.map((item, index) => {
+      {items.split('').map((item, index) => {
         return (
           <span key={`span-${index}`} ref={(el) => (refs.current[index] = el)}>
             {item}
