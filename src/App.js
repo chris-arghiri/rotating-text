@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './App.module.scss';
+import './App.css';
 
 import { gsap } from 'gsap';
 
-const App = ({ words = ['react.', 'something.', 'notworking.'] }) => {
+const App = ({
+  words = ['react.', 'something.', 'notworking.', 'howdidido?']
+}) => {
   const [count, setCount] = useState(0);
-  const [items, setItems] = useState(words[count]);
+  const [items, setItems] = useState(words[count + words.length - 1]);
   const refs = useRef([]);
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const App = ({ words = ['react.', 'something.', 'notworking.'] }) => {
       }
     ]);
     return () => {
-      // clean-up
+      timeline.clear();
     };
   }, [refs, words, count]);
 

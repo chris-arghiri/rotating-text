@@ -11,9 +11,3 @@ span {
   position: relative;
   opacity: 0;
 }
-
-// @for $index from 1 through 10 {
-//   span:nth-child(#{$index}n) {
-//     animation-delay: #{$index * 0.08s};
-//   }
-// }
