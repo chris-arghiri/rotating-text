@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 
 import { gsap } from 'gsap';
 
+type ReferenceSpanArray = HTMLSpanElement[] | any;
+
 const App = ({
   words = ['react.', 'something.', 'notworking.', 'howdidido?']
 }) => {
-  const [count, setCount] = useState(0);
-  const [items, setItems] = useState(words[count + words.length - 1]);
-  const refs = useRef([]);
+  const [count, setCount] = useState<number>(0);
+  const [items, setItems] = useState<string | null>(
+    words[count + words.length - 1]
+  );
+  let refs = useRef<ReferenceSpanArray>([]);
 
   useEffect(() => {
     let timeline = gsap.timeline();
@@ -30,7 +34,7 @@ const App = ({
         }
       )
     );
-    timeline.addPause(refs.current.lastItem, gsap.delayedCall, [
+    timeline.addPause(refs.current.lastItem, gsap.delayedCall as any, [
       3,
       () => {
         timeline.play();
@@ -51,7 +55,7 @@ const App = ({
         }
       )
     );
-    timeline.addPause(refs.current.lastItem, gsap.delayedCall, [
+    timeline.addPause(refs.current.lastItem, gsap.delayedCall as any, [
       0.5,
       () => {
         count < words.length - 1 ? setCount(count + 1) : setCount(0);
@@ -66,7 +70,7 @@ const App = ({
 
   return (
     <div className='.App'>
-      {items.split('').map((item, index) => {
+      {items?.split('').map((item, index) => {
         return (
           <span key={`span-${index}`} ref={(el) => (refs.current[index] = el)}>
             {item}
